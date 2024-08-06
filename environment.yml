@@ -1,0 +1,61 @@
+name: hsf-india
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+#  - emacs - broken after install, so just remove it
+  - zstandard
+  - zstd
+  - clang-tools
+  - fsspec
+  - lz4
+  - python-xxhash
+  - root
+  - cmake #needed to compile Geant examples
+  - openssh #otherwise ssh is broken due to bug with openssl it seems
+  - pip:
+      - astunparse
+      - awkward
+      - dask
+      - dask-awkward
+      - distributed
+      - dm-haiku
+      - h5py
+      - hepunits
+      - hist
+      - ipympl
+      - jupyterlab-deck
+      - jupyterlab-mathjax3
+      - matplotlib
+      - numba
+      - numexpr
+      - numpy
+      #cudf does not support pandas 2.0 until 24.04
+      - pandas==1.5.3
+      - particle
+      - protobuf
+      - pyarrow
+      - pybind11
+      - scikit-learn
+      - tables
+      - uproot
+      - vector
+      - mplhep
+      - requests
+      - aiohttp
+      - jax[cpu]
+      - graphviz
+      - dask-labextension==6.2.0
+      - tensorflow==2.16.1
+      - tensorflow-probability
+      - scikit-learn
+      - seaborn
+      - xgboost
+
+      
+variables:
+  LD_LIBRARY_PATH: "'$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CONDA_PREFIX/x86_64-conda-linux-gnu/sysroot/usr/lib64/'"
+  QT_QPA_PLATFORM: "offscreen"
+  
