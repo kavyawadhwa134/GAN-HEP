@@ -1,4 +1,4 @@
-name: hsf-india
+name: GAN-HEP
 channels:
   - defaults
   - conda-forge
