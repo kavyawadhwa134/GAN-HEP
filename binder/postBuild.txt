@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+pip install tensorrt --extra-index-url https://pypi.nvidia.com
+
+# pip appears to leave behind 4GB of stuff.. lets remove it.
+pip cache purge
+
+#clean up some big files - maybe we don't need them
+rm `find /srv/conda/envs -size +50M -name \*.a`
+
