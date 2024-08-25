@@ -59,6 +59,8 @@ dependencies:
       - torchvision
       - torchvision
       - torchaudio
+      - seaborn
+      - imageio
      
 variables:
   LD_LIBRARY_PATH: "'$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/'"
