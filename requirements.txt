@@ -48,3 +48,8 @@ seaborn==0.10.1
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.1
+tensorflow==2.13.0
+keras==2.13.1
