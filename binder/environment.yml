@@ -1,4 +1,4 @@
-name: hsf-india
+name: hsf-india-req
 channels:
   - defaults
   - nvidia/label/cuda-12.4.1
