@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export CODEX_HOME="${CODEX_HOME:-${HOME}/.codex}"
+export CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR:-${HOME}/.local/bin}"
+export PATH="${CODEX_INSTALL_DIR}:${PATH}"
+
+mkdir -p "${CODEX_HOME}"
+
+exec "$@"

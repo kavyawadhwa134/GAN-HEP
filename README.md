@@ -5,3 +5,47 @@ environment.yml
 julia.ipynb
 python-and-julia.ipynb
 python.ipynb
+
+## SSL-HEP Binder + Codex
+
+Launch the `gpu` branch on SSL-HEP BinderHub:
+
+```text
+https://binderhub.ssl-hep.org/v2/gh/kavyawadhwa134/GAN-HEP/gpu?urlpath=lab
+```
+
+The Binder build installs the Codex CLI during `binder/postBuild` and makes it available in JupyterLab terminals through `binder/start`.
+
+For the interactive Codex chat and coding UI, open a JupyterLab terminal and authenticate:
+
+```bash
+codex login --device-auth
+```
+
+Then start Codex chat:
+
+```bash
+bash scripts/codex-chat.sh
+```
+
+Inside the chat, ask Codex to inspect files, edit code, write tests, or explain errors. It starts with `workspace-write` sandboxing so it can modify files in the Binder session.
+
+For one-shot Codex commands without opening the chat UI:
+
+```bash
+bash scripts/codex-binder.sh "summarize this repository and suggest the next coding step"
+```
+
+For read-only analysis:
+
+```bash
+CODEX_SANDBOX=read-only bash scripts/codex-binder.sh "explain GAN IMAGE.ipynb"
+```
+
+For code edits inside the Binder session:
+
+```bash
+CODEX_SANDBOX=workspace-write bash scripts/codex-binder.sh "make the smallest safe improvement to the training script"
+```
+
+The helper prompts for `CODEX_API_KEY` with hidden input and passes it only to that one `codex exec` invocation. Do not commit API keys, `auth.json`, `.codex/`, or `.env` files.

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export CODEX_HOME="${CODEX_HOME:-${HOME}/.codex}"
+export CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR:-${HOME}/.local/bin}"
+export PATH="${CODEX_INSTALL_DIR}:${PATH}"
+
+mkdir -p "${CODEX_HOME}" "${CODEX_INSTALL_DIR}"
+
+installer="$(mktemp)"
+cleanup() {
+  rm -f "${installer}"
+}
+trap cleanup EXIT
+
+if command -v curl >/dev/null 2>&1; then
+  curl -fsSL https://chatgpt.com/codex/install.sh -o "${installer}"
+elif command -v wget >/dev/null 2>&1; then
+  wget -qO "${installer}" https://chatgpt.com/codex/install.sh
+else
+  python - <<'PY' "${installer}"
+import sys
+from urllib.request import urlopen
+
+with urlopen("https://chatgpt.com/codex/install.sh", timeout=120) as response:
+    data = response.read()
+
+with open(sys.argv[1], "wb") as output:
+    output.write(data)
+PY
+fi
+
+CODEX_NON_INTERACTIVE=1 CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR}" sh "${installer}"
+codex --version

@@ -1,0 +1,5 @@
+.codex/
+.env
+*.env
+auth.json
+codex-output/
