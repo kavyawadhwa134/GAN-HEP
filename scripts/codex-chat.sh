@@ -9,8 +9,11 @@ fi
 cat <<'EOF'
 Starting Codex chat for this Binder session.
 
-First-time login in Binder:
+First-time login in Binder with ChatGPT:
   codex login --device-auth
+
+If your workspace blocks device-code login, use an OpenAI API key:
+  bash scripts/codex-login-api-key.sh
 
 Then run this helper again.
 EOF

@@ -8,10 +8,10 @@ python.ipynb
 
 ## SSL-HEP Binder + Codex
 
-Launch the `gpu` branch on SSL-HEP BinderHub:
+Launch the `gpu-new` branch on SSL-HEP BinderHub:
 
 ```text
-https://binderhub.ssl-hep.org/v2/gh/kavyawadhwa134/GAN-HEP/gpu?urlpath=lab
+https://binderhub.ssl-hep.org/v2/gh/kavyawadhwa134/GAN-HEP/gpu-new?urlpath=lab
 ```
 
 The Binder build installs the Codex CLI during `binder/postBuild` and makes it available in JupyterLab terminals through `binder/start`.
@@ -20,6 +20,12 @@ For the interactive Codex chat and coding UI, open a JupyterLab terminal and aut
 
 ```bash
 codex login --device-auth
+```
+
+If your selected ChatGPT workspace says device-code authentication is disabled, either choose your personal account or use API-key login:
+
+```bash
+bash scripts/codex-login-api-key.sh
 ```
 
 Then start Codex chat:
