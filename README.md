@@ -28,6 +28,25 @@ If your selected ChatGPT workspace says device-code authentication is disabled, 
 bash scripts/codex-login-api-key.sh
 ```
 
+If you do not have an API key, you can copy your local Codex login into the temporary Binder session. On your Mac, run:
+
+```bash
+python3 - <<'PY' | pbcopy
+import base64
+from pathlib import Path
+
+print(base64.b64encode(Path.home().joinpath(".codex", "auth.json").read_bytes()).decode())
+PY
+```
+
+Then in the Binder terminal, run:
+
+```bash
+bash scripts/codex-import-auth-json.sh
+```
+
+Paste when prompted. This is a sensitive login token; paste it only into your private Binder terminal, never into chat, notebooks, logs, or committed files.
+
 Then start Codex chat:
 
 ```bash

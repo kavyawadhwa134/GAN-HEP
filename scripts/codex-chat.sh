@@ -15,6 +15,9 @@ First-time login in Binder with ChatGPT:
 If your workspace blocks device-code login, use an OpenAI API key:
   bash scripts/codex-login-api-key.sh
 
+If you do not have an API key, import a local Codex auth cache:
+  bash scripts/codex-import-auth-json.sh
+
 Then run this helper again.
 EOF
 
