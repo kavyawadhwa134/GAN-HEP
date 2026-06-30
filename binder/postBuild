@@ -7,28 +7,39 @@ export PATH="${CODEX_INSTALL_DIR}:${PATH}"
 
 mkdir -p "${CODEX_HOME}" "${CODEX_INSTALL_DIR}"
 
-installer="$(mktemp)"
+codex_installer="$(mktemp)"
+claude_installer="$(mktemp)"
 cleanup() {
-  rm -f "${installer}"
+  rm -f "${codex_installer}" "${claude_installer}"
 }
 trap cleanup EXIT
 
-if command -v curl >/dev/null 2>&1; then
-  curl -fsSL https://chatgpt.com/codex/install.sh -o "${installer}"
-elif command -v wget >/dev/null 2>&1; then
-  wget -qO "${installer}" https://chatgpt.com/codex/install.sh
-else
-  python - <<'PY' "${installer}"
+download_file() {
+  local url="$1"
+  local output="$2"
+
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "${url}" -o "${output}"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO "${output}" "${url}"
+  else
+    python - <<'PY' "${url}" "${output}"
 import sys
 from urllib.request import urlopen
 
-with urlopen("https://chatgpt.com/codex/install.sh", timeout=120) as response:
+with urlopen(sys.argv[1], timeout=120) as response:
     data = response.read()
 
-with open(sys.argv[1], "wb") as output:
+with open(sys.argv[2], "wb") as output:
     output.write(data)
 PY
-fi
+  fi
+}
 
-CODEX_NON_INTERACTIVE=1 CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR}" sh "${installer}"
+download_file https://chatgpt.com/codex/install.sh "${codex_installer}"
+CODEX_NON_INTERACTIVE=1 CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR}" sh "${codex_installer}"
 codex --version
+
+download_file https://claude.ai/install.sh "${claude_installer}"
+bash "${claude_installer}"
+claude --version

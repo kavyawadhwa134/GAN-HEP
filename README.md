@@ -74,3 +74,35 @@ CODEX_SANDBOX=workspace-write bash scripts/codex-binder.sh "make the smallest sa
 ```
 
 The helper prompts for `CODEX_API_KEY` with hidden input and passes it only to that one `codex exec` invocation. Do not commit API keys, `auth.json`, `.codex/`, or `.env` files.
+
+## SSL-HEP Binder + Claude Code
+
+The Binder build also installs Claude Code during `binder/postBuild`.
+
+Open a JupyterLab terminal and check the install:
+
+```bash
+claude --version
+```
+
+Start Claude Code:
+
+```bash
+bash scripts/claude-chat.sh
+```
+
+On first run, Claude Code prints or opens a browser login URL. Sign in with a Claude account that includes Claude Code access. If your browser shows a login code instead of redirecting back to Binder, paste that code into the terminal prompt.
+
+If browser login is not available in Binder, generate a one-year OAuth token on a machine where Claude Code can log in:
+
+```bash
+claude setup-token
+```
+
+Then in Binder, run:
+
+```bash
+bash scripts/claude-token-chat.sh
+```
+
+Paste the token when prompted. This token is sensitive; paste it only into your private Binder terminal, never into chat, notebooks, logs, or committed files. Do not commit `.claude/`, API keys, OAuth tokens, or `.env` files.

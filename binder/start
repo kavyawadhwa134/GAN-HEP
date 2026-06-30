@@ -6,5 +6,6 @@ export CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR:-${HOME}/.local/bin}"
 export PATH="${CODEX_INSTALL_DIR}:${PATH}"
 
 mkdir -p "${CODEX_HOME}"
+mkdir -p "${HOME}/.claude"
 
 exec "$@"
