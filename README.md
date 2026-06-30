@@ -85,13 +85,27 @@ Open a JupyterLab terminal and check the install:
 claude --version
 ```
 
-Start Claude Code:
+Authenticate Claude Code:
+
+```bash
+bash scripts/claude-login.sh
+```
+
+Use the fresh login URL printed by Claude. If your browser cannot redirect back to Binder and instead shows a login code, paste that code back into the Binder terminal.
+
+For Anthropic Console billing instead of a Claude subscription:
+
+```bash
+bash scripts/claude-login.sh --console
+```
+
+Then start Claude Code:
 
 ```bash
 bash scripts/claude-chat.sh
 ```
 
-On first run, Claude Code prints or opens a browser login URL. Sign in with a Claude account that includes Claude Code access. If your browser shows a login code instead of redirecting back to Binder, paste that code into the terminal prompt.
+Sign in with a Claude account that includes Claude Code access.
 
 If browser login is not available in Binder, generate a one-year OAuth token on a machine where Claude Code can log in:
 

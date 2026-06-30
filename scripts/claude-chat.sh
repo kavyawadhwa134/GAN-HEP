@@ -9,9 +9,11 @@ fi
 cat <<'EOF'
 Starting Claude Code for this Binder session.
 
-If this is your first run in Binder, follow the login URL Claude prints.
+If this is your first run in Binder, authenticate first:
+  bash scripts/claude-login.sh
+
 If your browser shows a login code instead of redirecting back, paste that code
-back into this terminal when Claude asks for it.
+back into the login terminal when Claude asks for it.
 EOF
 
 exec claude "$@"
