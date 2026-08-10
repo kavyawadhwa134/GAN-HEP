@@ -7,6 +7,14 @@ readonly OPENMC_GPU_REPOSITORY="https://github.com/exasmr/openmc.git"
 readonly OPENMC_GPU_REF="022ae9dc0710014ebc038dad5cf50df9371ee7ec"
 readonly OPENMC_GPU_ARCH="sm_80"
 readonly INSTALL_PREFIX="${HOME}/.local"
+# repo2docker puts the environment's Python on PATH during postBuild without
+# activating Conda, so CONDA_PREFIX is not guaranteed to be set there.
+readonly TOOLCHAIN_PREFIX="${CONDA_PREFIX:-$(python -c 'import sys; print(sys.prefix)')}"
+
+if [[ ! -x "${TOOLCHAIN_PREFIX}/bin/clang" || ! -x "${TOOLCHAIN_PREFIX}/bin/clang++" ]]; then
+  echo "OpenMC GPU toolchain not found under ${TOOLCHAIN_PREFIX}" >&2
+  exit 1
+fi
 
 export PATH="${INSTALL_PREFIX}/bin:${PATH}"
 export LD_LIBRARY_PATH="${INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
@@ -32,10 +40,10 @@ cmake \
   -S "${source_dir}" \
   -B "${build_dir}" \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_COMPILER="${CONDA_PREFIX}/bin/clang" \
-  -DCMAKE_CXX_COMPILER="${CONDA_PREFIX}/bin/clang++" \
+  -DCMAKE_C_COMPILER="${TOOLCHAIN_PREFIX}/bin/clang" \
+  -DCMAKE_CXX_COMPILER="${TOOLCHAIN_PREFIX}/bin/clang++" \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
-  -DCMAKE_CXX_FLAGS="-fopenmp -fopenmp-cuda-mode -fopenmp-targets=nvptx64 -Xopenmp-target -march=${OPENMC_GPU_ARCH} --cuda-path=${CONDA_PREFIX} -Dgsl_CONFIG_CONTRACT_CHECKING_OFF -Wno-tautological-constant-compare -Wno-openmp-mapping -Wno-unknown-cuda-version" \
+  -DCMAKE_CXX_FLAGS="-fopenmp -fopenmp-cuda-mode -fopenmp-targets=nvptx64 -Xopenmp-target -march=${OPENMC_GPU_ARCH} --cuda-path=${TOOLCHAIN_PREFIX} -Dgsl_CONFIG_CONTRACT_CHECKING_OFF -Wno-tautological-constant-compare -Wno-openmp-mapping -Wno-unknown-cuda-version" \
   -Ddevice_printf=OFF \
   -Doptimize=ON
 
