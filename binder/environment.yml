@@ -54,7 +54,8 @@ dependencies:
       - pandas==1.5.3
       - particle
       - protobuf
-      - pycuda
+      # PyCUDA is not used by this repository. Its pip source build cannot find
+      # CURAND headers in the CUDA 12 conda target layout and aborts Binder.
       - pybind11
       - scikit-learn
       - tables
