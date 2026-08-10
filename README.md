@@ -6,6 +6,41 @@ julia.ipynb
 python-and-julia.ipynb
 python.ipynb
 
+## OpenMC GPU on SSL-HEP Binder
+
+Launch the `openmc-gpu` branch:
+
+```text
+https://binderhub.ssl-hep.org/v2/gh/kavyawadhwa134/GAN-HEP/openmc-gpu?urlpath=lab
+```
+
+This image adds the OpenMC team's experimental OpenMP target-offload fork,
+pinned at commit `022ae9dc0710014ebc038dad5cf50df9371ee7ec` and compiled for
+Ampere GPUs. It also installs the complete official ENDF/B-VIII.0 HDF5 data
+library and thermal-spectrum depletion chain. At runtime, OpenMC automatically
+receives:
+
+```text
+OPENMC_CROSS_SECTIONS=$HOME/.local/share/openmc/cross_sections.xml
+OPENMC_CHAIN_FILE=$HOME/.local/share/openmc/chain_endfb80.xml
+OPENMC_DEPLETE_CHAIN=$HOME/.local/share/openmc/chain_endfb80.xml
+```
+
+After JupyterLab starts, open a terminal and run:
+
+```bash
+bash binder/verify-openmc.sh
+```
+
+The check validates every HDF5 path listed in `cross_sections.xml`, then runs a
+small event-based criticality calculation with `OMP_TARGET_OFFLOAD=MANDATORY`.
+That setting makes the check fail instead of silently falling back to the CPU.
+
+The GPU fork identifies itself as OpenMC 0.13.0 and is intentionally separate
+from the newer CPU-only OpenMC release line. It has a feature gap relative to
+current upstream OpenMC, so keep production inputs within the GPU fork's
+supported feature set.
+
 ## SSL-HEP Binder + Codex
 
 Launch the `gpu-new` branch on SSL-HEP BinderHub:

@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly OPENMC_DATA_URL="https://anl.box.com/shared/static/uhbxlrx7hvxqw27psymfbhi7bx7s6u6a.xz"
+readonly OPENMC_CHAIN_URL="https://anl.box.com/shared/static/nyezmyuofd4eqt6wzd626lqth7wvpprr.xml"
+readonly OPENMC_DATA_DIR="${OPENMC_DATA_DIR:-${HOME}/.local/share/openmc}"
+readonly CROSS_SECTIONS_LINK="${OPENMC_DATA_DIR}/cross_sections.xml"
+readonly CHAIN_FILE="${OPENMC_DATA_DIR}/chain_endfb80.xml"
+
+mkdir -p "${OPENMC_DATA_DIR}"
+
+download_file() {
+  local url="$1"
+  local output="$2"
+
+  if command -v curl >/dev/null 2>&1; then
+    curl --fail --location \
+      --retry 5 --retry-all-errors --connect-timeout 30 \
+      --output "${output}" "${url}"
+  elif command -v wget >/dev/null 2>&1; then
+    wget --tries=5 --timeout=30 --output-document="${output}" "${url}"
+  else
+    python - "${url}" "${output}" <<'PY'
+import sys
+from urllib.request import urlopen
+
+with urlopen(sys.argv[1], timeout=120) as response:
+    with open(sys.argv[2], "wb") as output:
+        while chunk := response.read(1024 * 1024):
+            output.write(chunk)
+PY
+  fi
+}
+
+find_cross_sections() {
+  find "${OPENMC_DATA_DIR}" \
+    -type f -name cross_sections.xml \
+    ! -path "${CROSS_SECTIONS_LINK}" \
+    -print -quit
+}
+
+cross_sections="$(find_cross_sections)"
+if [[ -z "${cross_sections}" ]]; then
+  archive="$(mktemp "${OPENMC_DATA_DIR}/.endfb80.XXXXXX.tar.xz")"
+  cleanup() {
+    rm -f "${archive}"
+  }
+  trap cleanup EXIT
+
+  download_file "${OPENMC_DATA_URL}" "${archive}"
+  tar --extract --xz --file "${archive}" --directory "${OPENMC_DATA_DIR}"
+  cross_sections="$(find_cross_sections)"
+fi
+
+if [[ -z "${cross_sections}" ]]; then
+  printf 'No cross_sections.xml was found after extracting ENDF/B-VIII.0.\n' >&2
+  exit 1
+fi
+
+ln -sfn "${cross_sections}" "${CROSS_SECTIONS_LINK}"
+
+if [[ ! -s "${CHAIN_FILE}" ]]; then
+  chain_download="$(mktemp "${OPENMC_DATA_DIR}/.chain_endfb80.XXXXXX.xml")"
+  download_file "${OPENMC_CHAIN_URL}" "${chain_download}"
+  mv "${chain_download}" "${CHAIN_FILE}"
+fi
+
+OPENMC_CROSS_SECTIONS="${CROSS_SECTIONS_LINK}" \
+OPENMC_CHAIN_FILE="${CHAIN_FILE}" \
+python binder/validate-openmc-data.py

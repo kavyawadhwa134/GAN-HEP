@@ -2,6 +2,7 @@ name: hsf-india-req
 channels:
   - defaults
   - nvidia/label/cuda-12.4.1
+  - conda-forge
 dependencies:
   - python=3.10
 #  - cuda=12.4 
@@ -14,6 +15,14 @@ dependencies:
   - zstandard
   - zstd
   - clang-tools
+  # LLVM's OpenMP target runtime is used to build the OpenMC NVIDIA GPU port.
+  - conda-forge::clangxx=18.1.8
+  - conda-forge::llvm-openmp=18.1.8
+  - conda-forge::cmake
+  - conda-forge::cython=0.29.37
+  - conda-forge::hdf5=1.14
+  - conda-forge::lxml
+  - conda-forge::uncertainties
   - fsspec
   - lz4
   - pyarrow
@@ -38,7 +47,9 @@ dependencies:
       - matplotlib
       - numba
       - numexpr
-      - numpy
+      # OpenMC GPU 0.13 and the pinned RAPIDS/Pandas stack require NumPy 1.x.
+      - numpy<2
+      - scipy<1.14
       #cudf does not support pandas 2.0 until 24.0
       - pandas==1.5.3
       - particle

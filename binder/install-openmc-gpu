@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# This is the OpenMC team's experimental OpenMP target-offload fork. Pinning the
+# commit makes Binder rebuilds reproducible even if the branch moves upstream.
+readonly OPENMC_GPU_REPOSITORY="https://github.com/exasmr/openmc.git"
+readonly OPENMC_GPU_REF="022ae9dc0710014ebc038dad5cf50df9371ee7ec"
+readonly OPENMC_GPU_ARCH="sm_80"
+readonly INSTALL_PREFIX="${HOME}/.local"
+
+export PATH="${INSTALL_PREFIX}/bin:${PATH}"
+export LD_LIBRARY_PATH="${INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
+
+build_root="$(mktemp -d)"
+cleanup() {
+  rm -rf "${build_root}"
+}
+trap cleanup EXIT
+
+source_dir="${build_root}/openmc"
+build_dir="${source_dir}/build"
+
+git init --quiet "${source_dir}"
+git -C "${source_dir}" remote add origin "${OPENMC_GPU_REPOSITORY}"
+git -C "${source_dir}" fetch --quiet --depth 1 origin "${OPENMC_GPU_REF}"
+git -C "${source_dir}" checkout --quiet --detach FETCH_HEAD
+git -C "${source_dir}" submodule update --init --recursive --depth 1
+
+# The SSL-HEP GPU is an RTX 3090 (sm_86). NVIDIA supports loading sm_80 code on
+# later Ampere minor revisions, so the fork's A100 target also works on sm_86.
+cmake \
+  -S "${source_dir}" \
+  -B "${build_dir}" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_COMPILER="${CONDA_PREFIX}/bin/clang" \
+  -DCMAKE_CXX_COMPILER="${CONDA_PREFIX}/bin/clang++" \
+  -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
+  -DCMAKE_CXX_FLAGS="-fopenmp -fopenmp-cuda-mode -fopenmp-targets=nvptx64 -Xopenmp-target -march=${OPENMC_GPU_ARCH} --cuda-path=${CONDA_PREFIX} -Dgsl_CONFIG_CONTRACT_CHECKING_OFF -Wno-tautological-constant-compare -Wno-openmp-mapping -Wno-unknown-cuda-version" \
+  -Ddevice_printf=OFF \
+  -Doptimize=ON
+
+cmake --build "${build_dir}" --parallel "${OPENMC_BUILD_JOBS:-2}"
+cmake --install "${build_dir}"
+
+# CMake copies the compiled libopenmc into the Python source tree, and the
+# non-editable install then carries that GPU-enabled library into site-packages.
+python -m pip install --no-deps --no-build-isolation "${source_dir}"
+
+command -v openmc
+openmc --version
+python -c 'import openmc; print("OpenMC Python API:", openmc.__version__)'

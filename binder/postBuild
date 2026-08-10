@@ -7,6 +7,9 @@ export PATH="${CODEX_INSTALL_DIR}:${PATH}"
 
 mkdir -p "${CODEX_HOME}" "${CODEX_INSTALL_DIR}"
 
+bash binder/install-openmc-gpu
+bash binder/install-openmc-data
+
 codex_installer="$(mktemp)"
 claude_installer="$(mktemp)"
 cleanup() {

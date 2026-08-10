@@ -4,6 +4,13 @@ set -euo pipefail
 export CODEX_HOME="${CODEX_HOME:-${HOME}/.codex}"
 export CODEX_INSTALL_DIR="${CODEX_INSTALL_DIR:-${HOME}/.local/bin}"
 export PATH="${CODEX_INSTALL_DIR}:${PATH}"
+export LD_LIBRARY_PATH="${HOME}/.local/lib:${LD_LIBRARY_PATH:-}"
+
+export OPENMC_DATA_DIR="${OPENMC_DATA_DIR:-${HOME}/.local/share/openmc}"
+export OPENMC_CROSS_SECTIONS="${OPENMC_CROSS_SECTIONS:-${OPENMC_DATA_DIR}/cross_sections.xml}"
+export OPENMC_CHAIN_FILE="${OPENMC_CHAIN_FILE:-${OPENMC_DATA_DIR}/chain_endfb80.xml}"
+# OpenMC 0.13 uses the older depletion-chain variable name.
+export OPENMC_DEPLETE_CHAIN="${OPENMC_DEPLETE_CHAIN:-${OPENMC_CHAIN_FILE}}"
 
 mkdir -p "${CODEX_HOME}"
 mkdir -p "${HOME}/.claude"
