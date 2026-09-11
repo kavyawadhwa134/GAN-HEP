@@ -24,7 +24,9 @@ NekRS/HYPRE's CUDA compiler check links both `libcudadevrt.a` and
 packages provide every CUDA imported target linked by NekRS's GPU HYPRE build.
 The tirpc compiler and linker flags are also propagated to CARDINAL's nested
 NekRS/HYPRE configure step; libMesh records `-ltirpc` in its link interface, so
-that step must retain the Conda library search path.
+that step must retain the Conda library search path. `LIBRARY_PATH` is exported
+as well because NekRS's CMake ExternalProject replaces `LDFLAGS` when launching
+HYPRE's configure script.
 
 ## Launch and build
 

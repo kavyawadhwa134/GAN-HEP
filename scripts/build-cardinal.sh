@@ -39,6 +39,12 @@ export OCCA_CACHE_DIR="${OCCA_CACHE_DIR:-${HOME}/.cache/occa}"
 export JOBS="${BUILD_JOBS}"
 export LIBMESH_JOBS="${BUILD_JOBS}"
 export MOOSE_JOBS="${BUILD_JOBS}"
+# NekRS launches HYPRE through CMake ExternalProject and replaces LDFLAGS in
+# that nested configure command. GCC's own search variables survive that
+# boundary, keeping libtirpc and the Conda CUDA libraries discoverable.
+export LIBRARY_PATH="${xdr_libdir}${LIBRARY_PATH:+:${LIBRARY_PATH}}"
+export LD_LIBRARY_PATH="${xdr_libdir}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+export CPATH="${xdr_include}${CPATH:+:${CPATH}}"
 
 mkdir -p "$(dirname "${CARDINAL_ROOT}")" "${OCCA_CACHE_DIR}"
 
