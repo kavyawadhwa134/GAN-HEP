@@ -127,9 +127,13 @@ NVIDIA driver and A10 are supplied to the container at runtime.
    commands on the builder machine.
 3. Add the runner label `cardinal-builder`, install Docker, and verify that the
    runner account can use Docker without an interactive password.
-4. Open **Actions → Build CARDINAL image → Run workflow**, select the
-   `cardinal` branch, and start the workflow.
-5. After the first successful push, make the GHCR package public so SSL-HEP can
+4. GitHub only enables a manually dispatched workflow when its workflow file
+   exists on the default branch. Merge `.github/workflows/cardinal-image.yml`
+   into `main` once, while retaining the complete image definition on the
+   `cardinal` branch.
+5. Open **Actions → Build CARDINAL image → Run workflow**, select the
+   `cardinal` branch, keep `build_jobs` at 8 for the first build, and start it.
+6. After the first successful push, make the GHCR package public so SSL-HEP can
    pull it without registry credentials.
 
 The ENDF/B-VIII.0 data is not baked into this first image. It is 13 GB, GHCR
