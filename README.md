@@ -108,6 +108,44 @@ mounts a persistent home volume, subsequent sessions can reuse the build. If
 the home directory is ephemeral, point `CARDINAL_ROOT` and `OCCA_CACHE_DIR` at
 an available persistent volume before building.
 
+## Prebuilt GHCR image
+
+The repository includes `docker/cardinal.Dockerfile` and a manually triggered
+GitHub Actions workflow that builds CARDINAL once and publishes:
+
+```text
+ghcr.io/kavyawadhwa134/gan-hep-cardinal:runtime
+```
+
+The workflow deliberately targets a self-hosted Linux x86-64 runner carrying
+the custom label `cardinal-builder`. Use a machine with Docker, at least 32 GB
+RAM, and at least 150 GB free disk. A GPU is not required while compiling; the
+NVIDIA driver and A10 are supplied to the container at runtime.
+
+1. In GitHub, open **Settings → Actions → Runners → New self-hosted runner**.
+2. Select Linux/x64 and run GitHub's displayed installation and registration
+   commands on the builder machine.
+3. Add the runner label `cardinal-builder`, install Docker, and verify that the
+   runner account can use Docker without an interactive password.
+4. Open **Actions → Build CARDINAL image → Run workflow**, select the
+   `cardinal` branch, and start the workflow.
+5. After the first successful push, make the GHCR package public so SSL-HEP can
+   pull it without registry credentials.
+
+The ENDF/B-VIII.0 data is not baked into this first image. It is 13 GB, GHCR
+limits each layer to 10 GB, and keeping data separate avoids making every code
+update re-transfer the nuclear library. Download or restore it to
+`$HOME/cross_sections` with `scripts/download-openmc-data.sh` on a persistent
+volume or from object storage.
+
+Do not replace the Binder configuration with a root `Dockerfile` until the
+`runtime` tag exists and is publicly pullable. At that point the Binder-facing
+Dockerfile can use the prebuilt image as its base:
+
+```dockerfile
+FROM ghcr.io/kavyawadhwa134/gan-hep-cardinal:runtime
+```
+
 ## Important runtime requirement
 
 The Binder GPU profile must expose an NVIDIA device and driver to the user pod.

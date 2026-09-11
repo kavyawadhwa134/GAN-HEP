@@ -22,6 +22,8 @@ echo
 echo "GPU visibility"
 if command -v nvidia-smi >/dev/null 2>&1; then
   nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+elif [[ "${CARDINAL_REQUIRE_GPU:-1}" == "0" ]]; then
+  echo "nvidia-smi is missing; allowed for this CPU-only image build."
 else
   echo "nvidia-smi is missing. Launch this branch with an SSL GPU profile."
   failed=1

@@ -1,0 +1,11 @@
+.git
+.github
+*.ipynb
+tests
+work
+cross_sections
+cardinal
+cardinal-*.log
+*.tar
+*.tar.gz
+*.tar.zst
