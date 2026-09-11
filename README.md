@@ -90,6 +90,9 @@ the CARDINAL source is available:
 export OPENMC_CROSS_SECTIONS=/path/to/cross_sections.xml
 ```
 
+When the data is downloaded to CARDINAL's default location under
+`$HOME/cross_sections`, Binder startup exports this variable automatically.
+
 ## Persistence
 
 The default source and build location is `${HOME}/cardinal`. If SSL BinderHub
