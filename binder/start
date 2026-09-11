@@ -2,7 +2,6 @@
 set -euo pipefail
 
 cardinal_root="${CARDINAL_ROOT:-${HOME}/cardinal}"
-openmc_cross_sections="${HOME}/cross_sections/endfb-vii.1-hdf5/cross_sections.xml"
 export CARDINAL_ROOT="${cardinal_root}"
 export CARDINAL_DIR="${cardinal_root}"
 export NEKRS_HOME="${cardinal_root}/install"
@@ -15,8 +14,15 @@ if [[ -x "${cardinal_root}/cardinal-opt" ]]; then
   export PATH="${cardinal_root}:${cardinal_root}/install/bin:${PATH}"
 fi
 
-if [[ -f "${openmc_cross_sections}" ]]; then
-  export OPENMC_CROSS_SECTIONS="${openmc_cross_sections}"
+if [[ -z "${OPENMC_CROSS_SECTIONS:-}" ]]; then
+  for openmc_cross_sections in \
+    "${HOME}/cross_sections/endfb-vii.1-hdf5/cross_sections.xml" \
+    "${HOME}/cross_sections/endfb-viii.0-hdf5/cross_sections.xml"; do
+    if [[ -f "${openmc_cross_sections}" ]]; then
+      export OPENMC_CROSS_SECTIONS="${openmc_cross_sections}"
+      break
+    fi
+  done
 fi
 
 exec "$@"

@@ -87,7 +87,15 @@ the CARDINAL source is available:
 
 ```bash
 ./scripts/download-openmc-data.sh
-export OPENMC_CROSS_SECTIONS=/path/to/cross_sections.xml
+export OPENMC_CROSS_SECTIONS=$HOME/cross_sections/endfb-vii.1-hdf5/cross_sections.xml
+```
+
+CARDINAL's regression tests assume the VII.1 library above. To download the
+official OpenMC ENDF/B-VIII.0 library for user simulations instead:
+
+```bash
+OPENMC_DATA_LIBRARY=endfb-viii.0-hdf5 ./scripts/download-openmc-data.sh
+export OPENMC_CROSS_SECTIONS=$HOME/cross_sections/endfb-viii.0-hdf5/cross_sections.xml
 ```
 
 When the data is downloaded to CARDINAL's default location under
