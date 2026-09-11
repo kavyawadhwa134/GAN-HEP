@@ -13,6 +13,7 @@ dependencies:
   - cuda-cudart-dev
   - libcurand-dev
   - git-lfs
+  - libtirpc
   - jupyterlab
   - ipykernel
   - ipywidgets

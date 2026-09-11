@@ -27,6 +27,15 @@ else
   failed=1
 fi
 
+echo
+echo "XDR/libtirpc support"
+if [[ -n "${CONDA_PREFIX:-}" && -f "${CONDA_PREFIX}/include/tirpc/rpc/xdr.h" ]]; then
+  echo "XDR header   ${CONDA_PREFIX}/include/tirpc/rpc/xdr.h"
+else
+  echo "XDR header   MISSING (expected under CONDA_PREFIX/include/tirpc)"
+  failed=1
+fi
+
 if [[ "${failed}" -ne 0 ]]; then
   echo
   echo "Runtime validation failed; CARDINAL/NekRS compilation has not started."

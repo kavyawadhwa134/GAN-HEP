@@ -16,6 +16,8 @@ script_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cuda_compiler="$(command -v nvcc)"
 cuda_root="${CUDA_HOME:-$(cd "$(dirname "${cuda_compiler}")/.." && pwd)}"
+xdr_include="${CONDA_PREFIX}/include/tirpc"
+xdr_libdir="${CONDA_PREFIX}/lib"
 
 # Use the system MPI wrappers. The MOOSE conda compiler wrappers are deliberately
 # excluded because CARDINAL documents that they conflict with NekRS's HYPRE.
@@ -52,7 +54,11 @@ echo "Building PETSc."
 ./contrib/moose/scripts/update_and_rebuild_petsc.sh
 
 echo "Building libMesh."
-./contrib/moose/scripts/update_and_rebuild_libmesh.sh --with-vexcl=no
+./contrib/moose/scripts/update_and_rebuild_libmesh.sh \
+  --with-xdr-include="${xdr_include}" \
+  --with-xdr-libdir="${xdr_libdir}" \
+  --with-xdr-libname=tirpc \
+  --with-vexcl=no
 
 echo "Building WASP."
 ./contrib/moose/scripts/update_and_rebuild_wasp.sh
