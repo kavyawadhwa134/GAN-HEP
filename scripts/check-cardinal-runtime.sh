@@ -47,6 +47,17 @@ for cuda_library in libcudadevrt.a libcudart_static.a; do
   fi
 done
 
+echo
+echo "CUDA math libraries for NekRS/HYPRE"
+for cuda_library in libcublas.so libcurand.so libcusolver.so libcusparse.so; do
+  if [[ -n "${CONDA_PREFIX:-}" && -e "${CONDA_PREFIX}/lib/${cuda_library}" ]]; then
+    echo "${cuda_library} ${CONDA_PREFIX}/lib/${cuda_library}"
+  else
+    echo "${cuda_library} MISSING"
+    failed=1
+  fi
+done
+
 if [[ "${failed}" -ne 0 ]]; then
   echo
   echo "Runtime validation failed; CARDINAL/NekRS compilation has not started."
