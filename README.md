@@ -24,6 +24,8 @@ NekRS/HYPRE's CUDA compiler check links both `libcudadevrt.a` and
 packages provide every CUDA imported target linked by NekRS's GPU HYPRE build.
 The CUDA profiler API package supplies `cuda_profiler_api.h`, which HYPRE's
 CUDA utilities include directly.
+The CUDA 12.4 nvJitLink runtime is pinned alongside cuSPARSE so its versioned
+symbols resolve when NekRS executables are linked.
 The tirpc compiler and linker flags are also propagated to CARDINAL's nested
 NekRS/HYPRE configure step; libMesh records `-ltirpc` in its link interface, so
 that step must retain the Conda library search path. `LIBRARY_PATH` is exported

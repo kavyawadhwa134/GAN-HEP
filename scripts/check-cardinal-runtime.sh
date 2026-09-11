@@ -49,7 +49,7 @@ done
 
 echo
 echo "CUDA math libraries for NekRS/HYPRE"
-for cuda_library in libcublas.so libcurand.so libcusolver.so libcusparse.so; do
+for cuda_library in libcublas.so libcurand.so libcusolver.so libcusparse.so libnvJitLink.so.12; do
   if [[ -n "${CONDA_PREFIX:-}" && -e "${CONDA_PREFIX}/lib/${cuda_library}" ]]; then
     echo "${cuda_library} ${CONDA_PREFIX}/lib/${cuda_library}"
   else

@@ -17,6 +17,7 @@ dependencies:
   - libcurand-dev
   - libcusolver-dev
   - libcusparse-dev
+  - libnvjitlink=12.4.127
   - git-lfs
   - libtirpc
   - jupyterlab
