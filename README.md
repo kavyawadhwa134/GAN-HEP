@@ -16,8 +16,9 @@ package. CARDINAL documents that MOOSE's Conda compiler wrappers expose HYPRE
 headers incompatible with NekRS. MOOSE, PETSc, libMesh, WASP, NekRS, OpenMC,
 and CARDINAL are built from source instead. Conda is used for Jupyter and the
 CUDA development toolkit. Conda also supplies `libtirpc`; its XDR headers and
-library paths are passed explicitly to libMesh because Ubuntu 24.04 no longer
-provides the legacy RPC headers in the default include location.
+library paths and compiler/linker flags are passed explicitly to libMesh
+because Ubuntu 24.04 no longer provides the legacy RPC headers in the default
+include location.
 
 ## Launch and build
 
