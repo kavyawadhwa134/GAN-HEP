@@ -36,6 +36,17 @@ else
   failed=1
 fi
 
+echo
+echo "CUDA static runtime"
+for cuda_library in libcudadevrt.a libcudart_static.a; do
+  if [[ -n "${CONDA_PREFIX:-}" && -f "${CONDA_PREFIX}/lib/${cuda_library}" ]]; then
+    echo "${cuda_library} ${CONDA_PREFIX}/lib/${cuda_library}"
+  else
+    echo "${cuda_library} MISSING (install cuda-cudart-static)"
+    failed=1
+  fi
+done
+
 if [[ "${failed}" -ne 0 ]]; then
   echo
   echo "Runtime validation failed; CARDINAL/NekRS compilation has not started."

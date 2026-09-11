@@ -11,6 +11,7 @@ dependencies:
   - cuda-minimal-build=12.4
   - cuda-nvcc
   - cuda-cudart-dev
+  - cuda-cudart-static=12.4.127
   - libcurand-dev
   - git-lfs
   - libtirpc

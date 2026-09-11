@@ -18,7 +18,9 @@ and CARDINAL are built from source instead. Conda is used for Jupyter and the
 CUDA development toolkit. Conda also supplies `libtirpc`; its XDR headers and
 library paths and compiler/linker flags are passed explicitly to libMesh
 because Ubuntu 24.04 no longer provides the legacy RPC headers in the default
-include location.
+include location. The CUDA static runtime package is included because
+NekRS/HYPRE's CUDA compiler check links both `libcudadevrt.a` and
+`libcudart_static.a`.
 
 ## Launch and build
 
