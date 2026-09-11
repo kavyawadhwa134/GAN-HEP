@@ -12,6 +12,7 @@ dependencies:
   - cuda-nvcc
   - cuda-cudart-dev
   - cuda-cudart-static=12.4.127
+  - cuda-profiler-api=12.4.127
   - libcublas-dev
   - libcurand-dev
   - libcusolver-dev

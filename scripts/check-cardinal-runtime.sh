@@ -58,6 +58,15 @@ for cuda_library in libcublas.so libcurand.so libcusolver.so libcusparse.so; do
   fi
 done
 
+echo
+echo "CUDA profiler API required by HYPRE"
+if [[ -n "${CONDA_PREFIX:-}" && -f "${CONDA_PREFIX}/include/cuda_profiler_api.h" ]]; then
+  echo "cuda_profiler_api.h ${CONDA_PREFIX}/include/cuda_profiler_api.h"
+else
+  echo "cuda_profiler_api.h MISSING"
+  failed=1
+fi
+
 if [[ "${failed}" -ne 0 ]]; then
   echo
   echo "Runtime validation failed; CARDINAL/NekRS compilation has not started."
