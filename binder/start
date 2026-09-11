@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cardinal_root="${CARDINAL_ROOT:-${HOME}/cardinal}"
+export CARDINAL_ROOT="${cardinal_root}"
+export CARDINAL_DIR="${cardinal_root}"
+export NEKRS_HOME="${cardinal_root}/install"
+export OCCA_CACHE_DIR="${OCCA_CACHE_DIR:-${HOME}/.cache/occa}"
+export NEKRS_OCCA_MODE_DEFAULT="${NEKRS_OCCA_MODE_DEFAULT:-CUDA}"
+
+mkdir -p "${OCCA_CACHE_DIR}"
+
+if [[ -x "${cardinal_root}/cardinal-opt" ]]; then
+  export PATH="${cardinal_root}:${cardinal_root}/install/bin:${PATH}"
+fi
+
+exec "$@"

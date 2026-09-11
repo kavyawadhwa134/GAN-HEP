@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+chmod +x "${repository_root}/scripts/build-cardinal.sh"
+chmod +x "${repository_root}/scripts/check-cardinal-runtime.sh"
+chmod +x "${repository_root}/scripts/download-openmc-data.sh"
+
+python -m ipykernel install --user --name cardinal-nekrs --display-name "CARDINAL + NekRS"
+
+echo "CARDINAL source compilation is intentionally deferred to the GPU runtime pod."
+echo "Run ./scripts/build-cardinal.sh from a JupyterLab terminal after launch."
