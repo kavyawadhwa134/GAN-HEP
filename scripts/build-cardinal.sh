@@ -71,7 +71,11 @@ echo "Building WASP."
 ./contrib/moose/scripts/update_and_rebuild_wasp.sh
 
 echo "Building CARDINAL with OpenMC and the NekRS CUDA backend."
-make -j"${BUILD_JOBS}" \
+CPPFLAGS="${xdr_cppflags}" \
+LDFLAGS="${xdr_ldflags}" \
+LIBS="${xdr_libs}" \
+TIRPC_DIR="${xdr_include}" \
+  make -j"${BUILD_JOBS}" \
   MAKEFLAGS="-j${BUILD_JOBS}" \
   ENABLE_NEK=yes \
   ENABLE_OPENMC=yes \

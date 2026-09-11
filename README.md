@@ -22,6 +22,9 @@ include location. The CUDA static runtime package is included because
 NekRS/HYPRE's CUDA compiler check links both `libcudadevrt.a` and
 `libcudart_static.a`. The cuBLAS, cuSPARSE, cuSOLVER, and cuRAND development
 packages provide every CUDA imported target linked by NekRS's GPU HYPRE build.
+The tirpc compiler and linker flags are also propagated to CARDINAL's nested
+NekRS/HYPRE configure step; libMesh records `-ltirpc` in its link interface, so
+that step must retain the Conda library search path.
 
 ## Launch and build
 
